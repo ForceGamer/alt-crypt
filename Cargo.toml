@@ -1,0 +1,10 @@
+[package]
+name = "alt-crypt"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+argon2 = {version = "0.5.3", features = ["zeroize"]}
+aws-lc-rs = "1.15.4"
+ml-kem = {version = "0.3.0-rc.0", features = ["zeroize", "getrandom"]}
+rand = {version = "0.10.0", features = []}
