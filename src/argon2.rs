@@ -30,8 +30,7 @@ pub fn derive_aes_key(password: &str, salt: Option<Salt>) -> (AesKey, Salt) {
     (output, salt)
 }
 
-pub type HashString = String;
-pub fn hash_password(password: &str, salt_bytes: Option<Salt>) -> (HashString, Salt) {
+pub fn hash_password(password: &str, salt_bytes: Option<Salt>) -> (String, Salt) {
     let salt_bytes = match salt_bytes {
         Some(s) => s,
         None => {
