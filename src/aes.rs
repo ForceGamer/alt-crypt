@@ -2,6 +2,7 @@ use aws_lc_rs::aead::{AES_256_GCM, Aad, Nonce, RandomizedNonceKey};
 
 use crate::argon2::derive_aes_key;
 
+pub type AesKey = [u8; 32];
 const TAG_LEN: usize = 16;
 
 pub fn encrypt(data: &[u8], key: &[u8]) -> (Vec<u8>, Nonce) {
