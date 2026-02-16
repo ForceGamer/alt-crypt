@@ -34,6 +34,7 @@ pub fn seed_bytes(decap: DecapsulationKey) -> Vec<u8> {
 }
 
 pub fn bytes_to_seed(bytes: Vec<u8>) -> DecapsulationKey {
+    assert_eq!(bytes.len(), SEED_LEN);
     let seed = Seed {
         0: bytes.try_into().unwrap(),
     };
@@ -45,6 +46,7 @@ pub fn encap_bytes(encap: EncapsulationKey) -> Vec<u8> {
 }
 
 pub fn bytes_to_encap(bytes: Vec<u8>) -> EncapsulationKey {
+    assert_eq!(bytes.len(), ENCAP_LEN);
     let key_array: [u8; ENCAP_LEN] = bytes
         .try_into()
         .expect("bytes vector must have exactly 1568 elements");
