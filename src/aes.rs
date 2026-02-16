@@ -26,9 +26,9 @@ pub fn decrypt(encrypted: &[u8], key: &[u8], nonce: Nonce) -> Vec<u8> {
 
 #[test]
 fn crypt_integrity() {
-    let pass = "password";
+    let mut pass = "password".to_string();
     let data = "random";
-    let (key, _) = derive_aes_key(pass, None);
+    let (key, _) = derive_aes_key(&mut pass, None);
     let (encrypted, nonce) = encrypt(data.as_bytes(), &key);
     let decrypted = decrypt(&encrypted, &key, nonce);
     assert_eq!(data, String::from_utf8_lossy(&decrypted));
