@@ -7,12 +7,11 @@ use base64::prelude::BASE64_STANDARD;
 use rand::{Rng, rng};
 
 use crate::aes::AesKey;
-use crate::zeroize_string;
 
 const SALT_LEN: usize = 16;
 pub type Salt = [u8; SALT_LEN];
 
-pub fn derive_aes_key(password: &mut String, salt: Option<Salt>) -> (AesKey, Salt) {
+pub fn derive_aes_key(password: &String, salt: Option<Salt>) -> (AesKey, Salt) {
     let salt = match salt {
         Some(s) => s,
         None => {
@@ -28,11 +27,10 @@ pub fn derive_aes_key(password: &mut String, salt: Option<Salt>) -> (AesKey, Sal
     argon2
         .hash_password_into(password.as_bytes(), &salt, &mut output)
         .unwrap();
-    zeroize_string(password);
     (output, salt)
 }
 
-pub fn hash_password(password: &mut String, salt_bytes: Option<Salt>) -> (String, Salt) {
+pub fn hash_password(password: &String, salt_bytes: Option<Salt>) -> (String, Salt) {
     let salt_bytes = match salt_bytes {
         Some(s) => s,
         None => {
@@ -47,7 +45,6 @@ pub fn hash_password(password: &mut String, salt_bytes: Option<Salt>) -> (String
     let salt = argon2::password_hash::Salt::from_b64(&salt_b64).unwrap();
 
     let hash = argon2.hash_password(password.as_bytes(), salt).unwrap();
-    zeroize_string(password);
     (hash.to_string(), salt_bytes)
 }
 

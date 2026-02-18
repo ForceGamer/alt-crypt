@@ -11,7 +11,7 @@ pub fn read_file(path: impl AsRef<Path>) -> Result<Vec<u8>, std::io::Error> {
 }
 
 // AI-generated (but it's about what I would have done anyway)
-fn get_config_dir() -> String {
+pub fn get_config_dir() -> String {
     #[cfg(target_os = "windows")]
     {
         // Use Roaming AppData (e.g., C:\Users\Username\AppData\Roaming\YourApp)

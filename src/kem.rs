@@ -7,29 +7,14 @@ const ENCAP_LEN: usize = 1568;
 const SEED_LEN: usize = 64;
 const CIPHER_LEN: usize = 1568;
 
-/*enum BytesIdentity {
-    Encap([u8; ENCAP_LEN]),
-    Seed([u8; SEED_LEN]),
-    Ciphertext,
-    Nonce,
-    Salt,
-    Unknown(Vec<u8>),
+pub fn generate_keys() -> (
+    ml_kem::DecapsulationKey<MlKem1024>,
+    ml_kem::EncapsulationKey<MlKem1024>,
+) {
+    MlKem1024::generate_keypair()
 }
 
-pub fn identify_bytes(bytes: Vec<u8>) -> BytesIdentity {
-    match bytes.len() {
-        ENCAP_LEN => BytesIdentity::Encap(bytes.try_into().unwrap()),
-        SEED_LEN => BytesIdentity::Seed(bytes.try_into().unwrap()),
-        _ => BytesIdentity::Unknown(bytes),
-    }
-}
-*/
-
-pub fn generate_keys() {
-    let (decap, encap) = MlKem1024::generate_keypair();
-}
-
-pub fn seed_bytes(decap: DecapsulationKey) -> Vec<u8> {
+pub fn seed_bytes(decap: &DecapsulationKey) -> Vec<u8> {
     decap.to_seed().unwrap().to_vec()
 }
 
@@ -41,7 +26,7 @@ pub fn bytes_to_seed(bytes: Vec<u8>) -> DecapsulationKey {
     DecapsulationKey::from_seed(seed)
 }
 
-pub fn encap_bytes(encap: EncapsulationKey) -> Vec<u8> {
+pub fn encap_bytes(encap: &EncapsulationKey) -> Vec<u8> {
     encap.to_bytes().0.to_vec()
 }
 
@@ -57,7 +42,7 @@ pub fn bytes_to_encap(bytes: Vec<u8>) -> EncapsulationKey {
 #[test]
 fn test_encap_encoding() {
     let (_, encap) = MlKem1024::generate_keypair();
-    let bytes = encap_bytes(encap.clone());
+    let bytes = encap_bytes(&encap.clone());
     let restored = bytes_to_encap(bytes);
     assert_eq!(encap, restored);
 }
@@ -65,7 +50,7 @@ fn test_encap_encoding() {
 #[test]
 fn test_decap_encoding() {
     let (decap, _) = MlKem1024::generate_keypair();
-    let bytes = seed_bytes(decap.clone());
+    let bytes = seed_bytes(&decap.clone());
     let restored = bytes_to_seed(bytes);
     assert_eq!(decap, restored);
 }
