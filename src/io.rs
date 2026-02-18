@@ -1,12 +1,16 @@
+use std::io::Error;
 use std::path::Path;
 
-/// Panics if the path is root (and thus has no parent)
-pub fn write_file(path: impl AsRef<Path>, content: &[u8]) -> Result<(), std::io::Error> {
-    std::fs::create_dir_all(path.as_ref().parent().unwrap())?;
+pub fn write_file(path: impl AsRef<Path>, content: &[u8]) -> Result<(), Error> {
+    std::fs::create_dir_all(
+        path.as_ref()
+            .parent()
+            .ok_or_else(|| Error::other("Path has no parent"))?,
+    )?;
     std::fs::write(path, content)
 }
 
-pub fn read_file(path: impl AsRef<Path>) -> Result<Vec<u8>, std::io::Error> {
+pub fn read_file(path: impl AsRef<Path>) -> Result<Vec<u8>, Error> {
     std::fs::read(path)
 }
 
@@ -14,7 +18,7 @@ pub fn read_file(path: impl AsRef<Path>) -> Result<Vec<u8>, std::io::Error> {
 pub fn get_config_dir() -> String {
     #[cfg(target_os = "windows")]
     {
-        // Use Roaming AppData (e.g., C:\Users\Username\AppData\Roaming\YourApp)
+        // Use Roaming AppData (e.g., C:\Users\Username\AppData\Roaming)
         std::env::var("APPDATA").unwrap_or(format!(
             "{}\\AppData\\Roaming",
             std::env::var("USERPROFILE").unwrap()
