@@ -1,9 +1,10 @@
-mod aes;
-mod argon2;
-mod base64;
-mod deku;
-mod io;
-mod kem;
+pub mod aes;
+pub mod argon2;
+pub mod base64;
+pub mod deku;
+pub mod io;
+pub mod kem;
+mod types;
 
 use std::ptr;
 
